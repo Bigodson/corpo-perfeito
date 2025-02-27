@@ -56,18 +56,32 @@
             // Calcula o IMC
             const imc = (peso / ((altura / 100) ** 2)).toFixed(2);
 
-            // Exibe o resultado no site
-            const resultado = `
-                <h3>Suas Respostas:</h3>
-                <ul>
-                    <li><strong>Idade:</strong> ${idade}</li>
-                    <li><strong>Peso:</strong> ${peso} kg</li>
-                    <li><strong>Altura:</strong> ${altura} cm</li>
-                    <li><strong>IMC:</strong> ${imc}</li>
-                </ul>
-                <p>Em breve, você receberá uma recomendação personalizada!</p>
-            `;
-            document.getElementById('resultado').innerHTML = resultado;
+            // Envia os dados para a API
+            fetch(https://script.google.com/macros/s/AKfycbyzZ-LJPDi9k8vlT5b1w8RZ0ULJk7kh4rxe7c0wRuI7DVvfG4yk2eI-8Dq7AbPHurs/exec, {
+                method: 'POST',
+                body: JSON.stringify({ idade: idade, peso: peso, altura: altura, imc: imc }),
+                headers: { 'Content-Type': 'application/json' }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Exibe o resultado no site
+                const resultado = `
+                    <h3>Suas Respostas:</h3>
+                    <ul>
+                        <li><strong>Idade:</strong> ${idade}</li>
+                        <li><strong>Peso:</strong> ${peso} kg</li>
+                        <li><strong>Altura:</strong> ${altura} cm</li>
+                        <li><strong>IMC:</strong> ${imc}</li>
+                    </ul>
+                    <h3>Recomendação:</h3>
+                    <p>${data.recomendacao}</p>
+                `;
+                document.getElementById('resultado').innerHTML = resultado;
+            })
+            .catch(error => {
+                console.error('Erro ao enviar dados para a API:', error);
+                alert("Ocorreu um erro ao processar suas respostas. Tente novamente.");
+            });
         });
     </script>
 </body>
