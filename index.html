@@ -5,12 +5,16 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Quiz Corpo Perfeito</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .menu-recomendacao { margin-top: 20px; }
+        .menu-recomendacao button { margin: 5px; }
+    </style>
 </head>
 <body>
     <div class="container my-5">
         <h1 class="text-center">Quiz Corpo Perfeito</h1>
         <form id="quizForm">
-            <!-- Pergunta 1: Idade -->
+            <!-- Perguntas do quiz -->
             <div class="mb-3">
                 <label for="idade" class="form-label">1. Qual é a sua idade?</label>
                 <select class="form-select" id="idade" required>
@@ -20,19 +24,14 @@
                     <option value="36-45">36-45 anos</option>
                 </select>
             </div>
-
-            <!-- Pergunta 2: Peso -->
             <div class="mb-3">
                 <label for="peso" class="form-label">2. Qual é o seu peso atual? (kg)</label>
                 <input type="number" class="form-control" id="peso" placeholder="Ex: 70" required>
             </div>
-
-            <!-- Pergunta 3: Altura -->
             <div class="mb-3">
                 <label for="altura" class="form-label">3. Qual é a sua altura? (cm)</label>
                 <input type="number" class="form-control" id="altura" placeholder="Ex: 170" required>
             </div>
-
             <button type="submit" class="btn btn-primary">Enviar Respostas</button>
         </form>
         <div id="resultado" class="mt-4"></div>
@@ -57,7 +56,7 @@
             const imc = (peso / ((altura / 100) ** 2)).toFixed(2);
 
             // Envia os dados para a API
-            fetch(https://script.google.com/macros/s/AKfycbyzZ-LJPDi9k8vlT5b1w8RZ0ULJk7kh4rxe7c0wRuI7DVvfG4yk2eI-8Dq7AbPHurs/exec, {
+            fetch(https://script.google.com/macros/s/AKfycbyfF-yGluU5cIGwk8jPBua2d0Uh-49Ny7FZtqfTLI4/dev, {
                 method: 'POST',
                 body: JSON.stringify({ idade: idade, peso: peso, altura: altura, imc: imc }),
                 headers: { 'Content-Type': 'application/json' }
@@ -74,9 +73,42 @@
                         <li><strong>IMC:</strong> ${imc}</li>
                     </ul>
                     <h3>Recomendação:</h3>
-                    <p>${data.recomendacao}</p>
+                    <p><strong>Categoria:</strong> ${data.categoria}</p>
+                    <p>${data.descricao}</p>
+                    <div class="menu-recomendacao">
+                        <button onclick="mostrarReceitas()" class="btn btn-secondary">Ver Receitas</button>
+                        <button onclick="mostrarChas()" class="btn btn-secondary">Ver Chás</button>
+                        <button onclick="mostrarExercicios()" class="btn btn-secondary">Ver Exercícios</button>
+                    </div>
+                    <div id="detalhes-recomendacao" class="mt-4"></div>
                 `;
                 document.getElementById('resultado').innerHTML = resultado;
+
+                // Funções para exibir detalhes
+                window.mostrarReceitas = function () {
+                    const detalhes = data.receitas.map((receita, index) => `
+                        <h4>Receita ${index + 1}: ${receita.nome}</h4>
+                        <p><strong>Ingredientes:</strong> ${receita.ingredientes}</p>
+                        <p><strong>Modo de Preparo:</strong> ${receita.preparo}</p>
+                    `).join("");
+                    document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
+                };
+
+                window.mostrarChas = function () {
+                    const detalhes = data.chas.map((cha, index) => `
+                        <h4>Chá ${index + 1}: ${cha.nome}</h4>
+                        <p><strong>Ingredientes:</strong> ${cha.ingredientes}</p>
+                        <p><strong>Modo de Preparo:</strong> ${cha.preparo}</p>
+                    `).join("");
+                    document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
+                };
+
+                window.mostrarExercicios = function () {
+                    const detalhes = data.exercicios.map((exercicio, index) => `
+                        <p><strong>Exercício ${index + 1}:</strong> ${exercicio}</p>
+                    `).join("");
+                    document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
+                };
             })
             .catch(error => {
                 console.error('Erro ao enviar dados para a API:', error);
