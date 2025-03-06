@@ -56,7 +56,7 @@
             const imc = (peso / ((altura / 100) ** 2)).toFixed(2);
 
             // Envia os dados para a API
-            fetch('https://script.google.com/macros/s/AKfycbxphDVWwMQ8JZCcZ7R11QPbAon-zGX5syIEalKmKmez-OPrBXZfLUunULNgdXpKc-An/exec' , {
+            fetch('https://script.google.com/macros/s/AKfycbxphDVWwMQ8JZCcZ7R11QPbAon-zGX5syIEalKmKmez-OPrBXZfLUunULNgdXpKc-An/exec', {
                 method: 'POST',
                 body: JSON.stringify({ idade: idade, peso: peso, altura: altura, imc: imc }),
                 headers: { 'Content-Type': 'application/json' }
@@ -75,37 +75,43 @@
                     <h3>Recomendação:</h3>
                     <p><strong>Categoria:</strong> ${data.categoria}</p>
                     <p>${data.descricao}</p>
+                    <p>${data.caloriasDiarias}</p>
+                    <p>${data.observacao}</p>
                     <div class="menu-recomendacao">
-                        <button onclick="mostrarReceitas()" class="btn btn-secondary">Ver Receitas</button>
+                        <button onclick="mostrarRefeicoes()" class="btn btn-secondary">Ver Refeições</button>
                         <button onclick="mostrarChas()" class="btn btn-secondary">Ver Chás</button>
-                        <button onclick="mostrarExercicios()" class="btn btn-secondary">Ver Exercícios</button>
                     </div>
                     <div id="detalhes-recomendacao" class="mt-4"></div>
                 `;
                 document.getElementById('resultado').innerHTML = resultado;
 
                 // Funções para exibir detalhes
-                window.mostrarReceitas = function () {
-                    const detalhes = data.receitas.map((receita, index) => `
-                        <h4>Receita ${index + 1}: ${receita.nome}</h4>
-                        <p><strong>Ingredientes:</strong> ${receita.ingredientes}</p>
-                        <p><strong>Modo de Preparo:</strong> ${receita.preparo}</p>
+                window.mostrarRefeicoes = function () {
+                    const detalhes = data.refeicoes.map(dia => `
+                        <h4>${dia.dia}</h4>
+                        ${dia.refeicoes.map(refeicao => `
+                            <div class="card mb-3">
+                                <div class="card-body">
+                                    <h5 class="card-title">${refeicao.nome}: ${refeicao.descricao}</h5>
+                                    <p><strong>Ingredientes:</strong> ${refeicao.ingredientes}</p>
+                                    <p><strong>Modo de Preparo:</strong> ${refeicao.preparo}</p>
+                                    <p><strong>Calorias:</strong> ${refeicao.calorias} kcal</p>
+                                </div>
+                            </div>
+                        `).join("")}
                     `).join("");
                     document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
                 };
 
                 window.mostrarChas = function () {
-                    const detalhes = data.chas.map((cha, index) => `
-                        <h4>Chá ${index + 1}: ${cha.nome}</h4>
-                        <p><strong>Ingredientes:</strong> ${cha.ingredientes}</p>
-                        <p><strong>Modo de Preparo:</strong> ${cha.preparo}</p>
-                    `).join("");
-                    document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
-                };
-
-                window.mostrarExercicios = function () {
-                    const detalhes = data.exercicios.map((exercicio, index) => `
-                        <p><strong>Exercício ${index + 1}:</strong> ${exercicio}</p>
+                    const detalhes = data.chas.map(cha => `
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h5 class="card-title">${cha.nome}</h5>
+                                <p><strong>Ingredientes:</strong> ${cha.ingredientes}</p>
+                                <p><strong>Modo de Preparo:</strong> ${cha.preparo}</p>
+                            </div>
+                        </div>
                     `).join("");
                     document.getElementById('detalhes-recomendacao').innerHTML = detalhes;
                 };
